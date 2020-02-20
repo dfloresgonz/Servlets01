@@ -11,8 +11,37 @@
         <input type="password" id="pass" name="clave" placeholder="Clave">
         <button onclick="logear();">Login</button>
         <div id="rpta"></div>
+        <br><br>
+        <button onclick="consultar();">Consultar</button>
+        <table id="myTable" cellpadding="1" border="1" STYLE="border-collapse:collapse;width:100%">
+            <tr>
+                <th>Id</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Color</th>
+            </tr>
+            <tr>
+                <td>67</td>
+                <td>Tico</td>
+                <td>1400</td>
+                <td>Amarillo</td>
+            </tr>
+        </table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
+            function consultar() {
+                $.ajax({
+                    method : 'POST',
+                    url    : 'Consulta',
+                    success: function(msg) {
+                        console.log(msg);
+                    },
+                    error: function(msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+            
             function logear() {
                 var usuario = document.getElementById("user").value;
                 var clave = document.getElementById("pass").value;
