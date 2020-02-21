@@ -19,22 +19,58 @@
                 <th>Marca</th>
                 <th>Precio</th>
                 <th>Color</th>
-            </tr>
-            <tr>
-                <td>67</td>
-                <td>Tico</td>
-                <td>1400</td>
-                <td>Amarillo</td>
+                <th>Acciones</th>
             </tr>
         </table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
+            function borrar(btn, id_vehiculo) {
+                console.log(id_vehiculo);
+                var respuesta = prompt(`Escribe OK para eliminar`);
+                if(respuesta == 'OK') {
+                    var fila = btn.closest('tr');
+                    // LLAMAR AL JAVA
+                    $.ajax({
+                        method : 'POST',
+                        url    : 'EliminarServlet',
+                        data   : {
+                            id_ve : id_vehiculo
+                        },
+                        success: function(msg) {
+                            console.log(msg);
+                            fila.remove();
+                            alert(msg.mensaje);
+                        },
+                        error: function(msg) {
+                            console.error(msg);
+                        }
+                    });
+                }
+            }
+            
             function consultar() {
                 $.ajax({
                     method : 'POST',
                     url    : 'Consulta',
                     success: function(msg) {
-                        console.log(msg);
+                        //console.table(msg);
+                        var tabla = document.getElementById("myTable");
+                        for(var i = 0; i < msg.length; i++) {
+                            //CREO UNA FILA
+                            var fila = tabla.insertRow(1);
+                            //CREAR CELDAS
+                            var celda0 = fila.insertCell(0);
+                            var celda1 = fila.insertCell(1);
+                            var celda2 = fila.insertCell(2);
+                            var celda3 = fila.insertCell(3);
+                            var celda4 = fila.insertCell(4);
+                            //PONER UN VALOR EN CADA CELDA
+                            celda0.innerHTML = msg[i].id_vehiculo;
+                            celda1.innerHTML = msg[i].marca;
+                            celda2.innerHTML = msg[i].precio;
+                            celda3.innerHTML = msg[i].color;
+                            celda4.innerHTML = '<button onclick="borrar(this, '+msg[i].id_vehiculo+')">Borrar</button>';
+                        }
                     },
                     error: function(msg) {
                         console.error(msg);

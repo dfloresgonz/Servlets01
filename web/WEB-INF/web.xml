@@ -8,6 +8,10 @@
         <servlet-name>Consulta</servlet-name>
         <servlet-class>servlets.Consulta</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EliminarServlet</servlet-name>
+        <servlet-class>servlets.EliminarServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>Consulta</servlet-name>
         <url-pattern>/Consulta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EliminarServlet</servlet-name>
+        <url-pattern>/EliminarServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
