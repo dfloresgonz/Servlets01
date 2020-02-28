@@ -6,10 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>Iniciar Sesión</div>
-        <input type="text" id="user" name="usuario" placeholder="Usuario">
-        <input type="password" id="pass" name="clave" placeholder="Clave">
-        <button onclick="logear();">Login</button>
+        <div>ACTUALIZAR DATOS</div>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+        <input type="text" id="precio" name="precio" placeholder="Precio">
+        <input type="text" id="color" name="color" placeholder="Color">
+        
+        <!--button onclick="logear();">Actualizar</button-->
+        
         <div id="rpta"></div>
         <br><br>
         <button onclick="consultar();">Consultar</button>
@@ -24,6 +27,42 @@
         </table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
+            function ver (btn) {
+                var fila = btn.closest('tr');
+                var nombre = fila.cells[1].innerHTML;
+                var precio = fila.cells[2].innerHTML;
+                var color = fila.cells[3].innerHTML;
+                document.getElementById("nombre").value = nombre;
+                document.getElementById("precio").value = precio;
+                document.getElementById("color").value = color;
+                console.log(nombre);
+                console.log(precio);
+                console.log(color);
+                
+            }
+            function actualizar (id_vehiculo) {
+                var nombre = document.getElementById("nombre").value;
+                var precio = document.getElementById("precio").value;
+                var color = document.getElementById("color").value;
+                $.ajax({
+                    method : 'POST',
+                    url    : 'ActualizarServlet',
+                    data   : {
+                        id_ve : id_vehiculo,
+                        nombre : nombre,
+                        precio : precio,
+                        color : color
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        
+                        alert(msg.mensaje);
+                    },
+                    error: function(msg) {
+                        console.error(msg);
+                    }
+                });                          
+            }
             function borrar(btn, id_vehiculo) {
                 console.log(id_vehiculo);
                 var respuesta = prompt(`Escribe OK para eliminar`);
@@ -69,7 +108,9 @@
                             celda1.innerHTML = msg[i].marca;
                             celda2.innerHTML = msg[i].precio;
                             celda3.innerHTML = msg[i].color;
-                            celda4.innerHTML = '<button onclick="borrar(this, '+msg[i].id_vehiculo+')">Borrar</button>';
+                            celda4.innerHTML = '<button onclick="borrar(this, '+msg[i].id_vehiculo+')">Borrar</button>'+
+                            '<button onclick="actualizar('+msg[i].id_vehiculo+')">Actualizar</button>'
+                            +'<button onclick="ver(this)">Ver</button>';
                         }
                     },
                     error: function(msg) {

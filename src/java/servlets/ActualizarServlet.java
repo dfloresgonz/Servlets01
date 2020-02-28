@@ -1,3 +1,4 @@
+
 package servlets;
 
 import com.google.gson.JsonObject;
@@ -11,26 +12,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class EliminarServlet extends HttpServlet {
+
+public class ActualizarServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
-        try {
+try {
            PrintWriter out = response.getWriter();
            String id_vehiculo = request.getParameter("id_ve");
-           
+           String nombre = request.getParameter("nombre");
+           double precio = Double.parseDouble(request.getParameter("precio"));
+           String color = request.getParameter("color");
            //
            Class.forName("com.mysql.cj.jdbc.Driver");
            String url = "jdbc:mysql://localhost/tesla?user=root&password=mysqladmin";
            Connection connect = DriverManager.getConnection(url);
-           String query = "UPDATE  vehiculo SET nombre = ?, precio = ?, color = ? WHERE id_vehiculo = ?";
+           String query = "UPDATE vehiculo SET marca = ?, precio = ?, color=? WHERE id_vehiculo = ?";
            PreparedStatement ps = connect.prepareStatement(query);
-           ps.setInt(1, Integer.parseInt(id_vehiculo));
+           ps.setString(1,nombre);
+           ps.setDouble(2, precio);
+           ps.setString(3,color);
+           ps.setInt(4, Integer.parseInt(id_vehiculo));
            ps.executeUpdate();
            
            JsonObject gson = new JsonObject();
-           gson.addProperty("mensaje", "Vehiculo borrado.");
+           gson.addProperty("mensaje", "VEHICULO ACTUALIZADO    ");
            out.print(gson.toString());
         } catch(Exception e) {
             System.err.println(e);
