@@ -6,32 +6,55 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class EliminarServlet extends HttpServlet {
+public class InsertarServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         try {
            PrintWriter out = response.getWriter();
-           String id_vehiculo = request.getParameter("id_ve");
-           
+           String nombre = request.getParameter("nombre");
+           double precio = Double.parseDouble(request.getParameter("precio"));
+           String color = request.getParameter("color");
            //
            Class.forName("com.mysql.cj.jdbc.Driver");
            String url = "jdbc:mysql://localhost/tesla?user=root&password=mysqladmin";
            Connection connect = DriverManager.getConnection(url);
-           String query = "DELETE FROM vehiculo WHERE id_vehiculo = ?";
+           
+           String query = "SELECT MAX(id_vehiculo) + 1 AS new_id FROM vehiculo";
+           Statement statement = connect.createStatement();
+           ResultSet resultSet = statement.executeQuery(query);
+           
+           int idProd = 0;
+           while(resultSet.next()) {
+               idProd = resultSet.getInt("new_id");
+           }
+           if(idProd == 0) {
+               idProd = 1;
+           }
+           
+           query = "INSERT INTO vehiculo VALUES (?,?,?,?)";
            PreparedStatement ps = connect.prepareStatement(query);
-           ps.setInt(1, Integer.parseInt(id_vehiculo));
+           
+           
+           ps.setInt(1, idProd);
+           ps.setString(2,nombre);
+           ps.setDouble(3, precio);
+           ps.setString(4,color);
            ps.executeUpdate();
            
            JsonObject gson = new JsonObject();
-           gson.addProperty("mensaje", "Vehiculo borrado.");
-           out.print(gson.toString());
+           gson.addProperty("mensaje", "Vehiculo registrado.");
+           gson.addProperty("id_prod", idProd);
+           gson.addProperty("saludo", "CHAU");
+           out.print(gson.toString()); // Enviar rpta al JS
         } catch(Exception e) {
             System.err.println(e);
         }

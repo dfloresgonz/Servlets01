@@ -11,11 +11,11 @@
         <input type="text" id="precio" name="precio" placeholder="Precio">
         <input type="text" id="color" name="color" placeholder="Color">
         
-        <!--button onclick="logear();">Actualizar</button-->
+        <button onclick="insertar();">Insertar</button>
         
         <div id="rpta"></div>
         <br><br>
-        <button onclick="consultar();">Consultar</button>
+        <!--button onclick="consultar();">Consultar</button-->
         <table id="myTable" cellpadding="1" border="1" STYLE="border-collapse:collapse;width:100%">
             <tr>
                 <th>Id</th>
@@ -27,6 +27,46 @@
         </table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
+            consultar();
+            
+            function insertar() {
+                var nombre = document.getElementById("nombre").value;
+                var precio = document.getElementById("precio").value;
+                var color = document.getElementById("color").value;
+                $.ajax({
+                    method : 'POST',
+                    url    : 'InsertarServlet',
+                    data   : {
+                        nombre : nombre,
+                        precio : precio,
+                        color  : color
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        var tabla = document.getElementById("myTable");
+                        var fila = tabla.insertRow(1);
+                        //CREAR CELDAS
+                        var celda0 = fila.insertCell(0);
+                        var celda1 = fila.insertCell(1);
+                        var celda2 = fila.insertCell(2);
+                        var celda3 = fila.insertCell(3);
+                        var celda4 = fila.insertCell(4);
+                        //PONER UN VALOR EN CADA CELDA
+                        celda0.innerHTML = msg.id_prod;
+                        celda1.innerHTML = nombre;
+                        celda2.innerHTML = precio;
+                        celda3.innerHTML = color;
+                        celda4.innerHTML = '<button onclick="borrar(this, '+msg.id_prod+')">Borrar</button>'+
+                            '<button onclick="actualizar('+msg.id_prod+')">Actualizar</button>'
+                            +'<button onclick="ver(this)">Ver</button>';
+                        //alert(msg.mensaje);
+                    },
+                    error: function(msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+            
             function ver (btn) {
                 var fila = btn.closest('tr');
                 var nombre = fila.cells[1].innerHTML;
@@ -35,9 +75,6 @@
                 document.getElementById("nombre").value = nombre;
                 document.getElementById("precio").value = precio;
                 document.getElementById("color").value = color;
-                console.log(nombre);
-                console.log(precio);
-                console.log(color);
                 
             }
             function actualizar (id_vehiculo) {
@@ -61,7 +98,7 @@
                     error: function(msg) {
                         console.error(msg);
                     }
-                });                          
+                });
             }
             function borrar(btn, id_vehiculo) {
                 console.log(id_vehiculo);

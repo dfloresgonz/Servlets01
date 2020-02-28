@@ -16,6 +16,10 @@
         <servlet-name>ActualizarServlet</servlet-name>
         <servlet-class>servlets.ActualizarServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InsertarServlet</servlet-name>
+        <servlet-class>servlets.InsertarServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>ActualizarServlet</servlet-name>
         <url-pattern>/ActualizarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertarServlet</servlet-name>
+        <url-pattern>/InsertarServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
